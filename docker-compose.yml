@@ -1,0 +1,28 @@
+services:
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: gacha
+      MYSQL_DATABASE: gacha
+    ports:
+      - "3307:3306"
+    volumes:
+      - gacha_mysql:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-pgacha"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+  web:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: mysql://root:gacha@db:3306/gacha
+      AUTH_SECRET: dev-only-change-me-please-32b
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  gacha_mysql:

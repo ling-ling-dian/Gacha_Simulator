@@ -1,0 +1,9 @@
+node_modules
+.next
+.git
+.specify
+.github
+specs
+.tmp
+*.md
+!package.json

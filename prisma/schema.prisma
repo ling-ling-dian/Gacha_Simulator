@@ -1,0 +1,69 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Game {
+  id              String             @id
+  slug            String             @unique
+  name            String
+  bgArtUrl        String?            @db.VarChar(512)
+  currencyName    String
+  currencyPerPull Int
+  notesJson       Json
+  items           PullableItem[]
+  offers          ShopOffer[]
+  progresses      UserGameProgress[]
+}
+
+model PullableItem {
+  id        String  @id
+  gameId    String
+  pool      String
+  kind      String
+  name      String
+  rarity    Int
+  maxCopies Int
+  imageUrl  String? @db.VarChar(512)
+  game      Game    @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@index([gameId])
+}
+
+model ShopOffer {
+  id       String  @id
+  gameId   String
+  name     String
+  priceCny Int
+  crystals Int
+  kind     String
+  maxQty   Int
+  note     String? @db.VarChar(255)
+  game     Game    @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@index([gameId])
+}
+
+model User {
+  id           String             @id @default(cuid())
+  username     String             @unique
+  passwordHash String
+  createdAt    DateTime           @default(now())
+  progresses   UserGameProgress[]
+}
+
+model UserGameProgress {
+  id        String   @id @default(cuid())
+  userId    String
+  gameId    String
+  payload   Json
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  game      Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, gameId])
+}

@@ -41,6 +41,8 @@ export type GameDef = {
   slug: GameSlug;
   name: string;
   accent: string;
+  /** 首页竖条立绘。文件放 public/covers/ */
+  coverUrl: string;
   bgArtUrl: string | null;
   currencyName: string;
   currencyPerPull: number;
@@ -121,6 +123,7 @@ export const games: GameDef[] = [
     slug: "genshin",
     name: "原神",
     accent: "#e0a45a",
+    coverUrl: "/covers/genshin.jpg",
     bgArtUrl: null,
     currencyName: "原石",
     currencyPerPull: 160,
@@ -170,6 +173,7 @@ export const games: GameDef[] = [
     slug: "hsr",
     name: "崩坏：星穹铁道",
     accent: "#7eb6ff",
+    coverUrl: "/covers/hsr.jpg",
     bgArtUrl: null,
     currencyName: "星琼",
     currencyPerPull: 160,
@@ -213,6 +217,7 @@ export const games: GameDef[] = [
     slug: "zzz",
     name: "绝区零",
     accent: "#ff8a3d",
+    coverUrl: "/covers/zzz.jpg",
     bgArtUrl: null,
     currencyName: "菲林",
     currencyPerPull: 160,
@@ -255,6 +260,7 @@ export const games: GameDef[] = [
     slug: "lads",
     name: "恋与深空",
     accent: "#e38aa9",
+    coverUrl: "/covers/lads.jpg",
     bgArtUrl: null,
     currencyName: "钻石",
     currencyPerPull: 150,
@@ -301,6 +307,7 @@ export const games: GameDef[] = [
     slug: "nikki",
     name: "无限暖暖",
     accent: "#f2a7c3",
+    coverUrl: "/covers/nikki.jpg",
     bgArtUrl: null,
     currencyName: "钻石",
     currencyPerPull: 120,

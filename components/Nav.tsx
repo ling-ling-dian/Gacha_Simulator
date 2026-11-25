@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export function Nav() {
+  const pathname = usePathname();
   const [username, setUsername] = useState<string | null>(null);
 
   useEffect(() => {
@@ -19,7 +21,7 @@ export function Nav() {
   }
 
   return (
-    <header className="nav">
+    <header className={pathname === "/" ? "nav nav-overlay" : "nav"}>
       <Link href="/" className="brand">抽卡账本</Link>
       <nav className="nav-links">
         {username ? (

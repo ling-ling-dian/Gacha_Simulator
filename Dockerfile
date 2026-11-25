@@ -1,10 +1,9 @@
 FROM node:24-bookworm-slim
+RUN apt-get update && apt-get install -y default-mysql-client && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
-RUN apt-get update && apt-get install -y openssl ca-certificates && rm -rf /var/lib/apt/lists/*
 COPY package.json package-lock.json ./
-COPY prisma ./prisma
 RUN npm ci
 COPY . .
-RUN npx prisma generate && npm run build
+RUN npm run build
 EXPOSE 3000
-CMD ["sh", "-c", "npx prisma db push && npx tsx prisma/seed.ts && npm start"]
+CMD ["sh", "-c", "node node_modules/tsx/dist/cli.mjs sql/seed.ts && npm start"]

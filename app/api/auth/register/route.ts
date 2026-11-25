@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
-import { prisma } from "@/lib/db";
+import { createUser, findUserByUsername } from "@/lib/db";
 import { setSessionCookie, signSession } from "@/lib/auth";
 
 const bodySchema = z.object({
@@ -12,15 +12,9 @@ const bodySchema = z.object({
 export async function POST(request: Request) {
   const parsed = bodySchema.safeParse(await request.json().catch(() => null));
   if (!parsed.success) return NextResponse.json({ error: "用户名 3-20 位，密码至少 6 位" }, { status: 400 });
-  const exists = await prisma.user.findUnique({ where: { username: parsed.data.username } });
+  const exists = await findUserByUsername(parsed.data.username);
   if (exists) return NextResponse.json({ error: "这个用户名已经有了" }, { status: 409 });
-  const user = await prisma.user.create({
-    data: {
-      username: parsed.data.username,
-      passwordHash: await bcrypt.hash(parsed.data.password, 10),
-    },
-    select: { id: true, username: true },
-  });
+  const user = await createUser(parsed.data.username, await bcrypt.hash(parsed.data.password, 10));
   await setSessionCookie(await signSession(user.id));
   return NextResponse.json({ user });
 }

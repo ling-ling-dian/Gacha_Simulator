@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { SignJWT, jwtVerify } from "jose";
-import { prisma } from "@/lib/db";
+import { findUserById } from "@/lib/db";
 
 const cookieName = "gacha_session";
 
@@ -40,10 +40,7 @@ export async function currentUser() {
     const { payload } = await jwtVerify(token, secret());
     const userId = String(payload.uid ?? "");
     if (!userId) return null;
-    return prisma.user.findUnique({
-      where: { id: userId },
-      select: { id: true, username: true },
-    });
+    return findUserById(userId);
   } catch {
     return null;
   }
